@@ -20,6 +20,12 @@ start:
 build:
 	docker compose -f ./srcs/docker-compose.yml build
 
+logs:
+	docker compose -f ./srcs/docker-compose.yml logs
+
+status:
+	docker ps
+
 clean:
 	@docker stop $$(docker ps -qa) || true
 	@docker rm $$(docker ps -qa) || true
