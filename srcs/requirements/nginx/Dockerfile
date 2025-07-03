@@ -16,4 +16,5 @@ RUN mkdir -p /var/www/wordpress
 
 RUN chown -R www-data:www-data /var/www/wordpress
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"] 
+#on lance nginx avec le daemon off pour qu'il reste au premier plan (sinon le container s'arrete) et avec CMD au lieu d'entrypoint pour toujours avoir la main dessus
