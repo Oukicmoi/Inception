@@ -1,10 +1,10 @@
 #!/bin/bash
 
-sleep 10
 
 SQL_PASS=$(cat ./run/secrets/db_password)
 WP_ADMIN_PASS=$(cat ./run/secrets/wp_admin_password)
 WP_USER_PASS=$(cat ./run/secrets/wp_user_password)
+
 
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar #telecharge le dossier wp-cli qui permet de gerer wordpress en ligne de commande
 
@@ -22,11 +22,13 @@ chmod -R 755 /var/www/wordpress # on prepare le dossier courant ou wordpress va 
 
 chown -R www-data:www-data /var/www/wordpress # on definit www-data (user du groupe eponyme) comme propritaire du dossier pour permmettre a nginx et php-fpm d'exec les file a l'interieur (user:group)
 
+# rm wp-config.php
+
 #######
 
 wp core download --allow-root #on telecharge les fichiers wordpress dans le dossier courant
 
-wp core config --dbhost=mariadb:3306 --dbname="$SQL_DATABASE" --dbuser="$SQL_USER" --dbpass="$SQL_PASS" --skip-email --allow-root #on genere le wp-config.php et on le le config  
+wp core config --dbhost=mariadb:3306 --dbname="$SQL_DATABASE" --dbuser="$SQL_USER" --dbpass="$SQL_PASS" --allow-root #on genere le wp-config.php et on le le config  
 
 wp core install --url="$WP_DOMAIN_NAME" --title="$WP_TITLE" --admin_user="$WP_ADMIN_NAME" --admin_password="$WP_ADMIN_PASS" --admin_email="$WP_ADMIN_MAIL" --allow-root #on termine l'installation de wordpress
 
@@ -39,3 +41,5 @@ sed -i '36 s@/run/php/php7.4-fpm.sock@9000@' /etc/php/7.4/fpm/pool.d/www.conf #o
 mkdir -p /run/php #cree un reperoire temporaire necessaire pour php
 
 /usr/sbin/php-fpm7.4 -F #on lance php au premier plan
+
+sleep 10
